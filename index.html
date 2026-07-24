@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cinta — editor de tempo y stems</title>
+<meta name="theme-color" content="#14110F">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">CINTA</span>
+    <span class="brand-sub">tempo · pitch · stems</span>
+  </div>
+  <div class="status" id="statusPill">sin pista cargada</div>
+</header>
+
+<main>
+
+  <!-- Zona de carga / waveform -->
+  <section class="deck" id="deck">
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="fileInput" accept="audio/*" hidden>
+      <div class="dropzone-inner">
+        <div class="reel" aria-hidden="true">
+          <div class="reel-ring"></div>
+          <div class="reel-ring small"></div>
+        </div>
+        <p class="dropzone-title">Soltá un audio acá</p>
+        <p class="dropzone-sub">o <button class="link-btn" id="browseBtn">elegí un archivo</button> — mp3, wav, m4a, ogg</p>
+      </div>
+    </div>
+
+    <div class="waveform-wrap" id="waveformWrap" hidden>
+      <canvas id="waveCanvas" height="140"></canvas>
+      <canvas id="analyserCanvas" height="36"></canvas>
+      <div class="transport">
+        <button class="tbtn" id="playBtn" aria-label="Reproducir">▶</button>
+        <button class="tbtn" id="stopBtn" aria-label="Detener">■</button>
+        <span class="time" id="timeLabel">00:00 / 00:00</span>
+        <span class="track-name" id="trackName"></span>
+        <button class="link-btn" id="newFileBtn">cambiar archivo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Consola tempo / pitch -->
+  <section class="console" id="consoleSection" hidden>
+    <h2 class="section-title">01 — Tempo &amp; tono</h2>
+    <div class="faders">
+      <div class="fader-block">
+        <label for="tempoRange">Tempo</label>
+        <input type="range" id="tempoRange" min="50" max="200" value="100" step="1">
+        <div class="fader-value"><span id="tempoValue">100</span>%</div>
+      </div>
+      <div class="fader-block">
+        <label for="pitchRange">Tono</label>
+        <input type="range" id="pitchRange" min="-12" max="12" value="0" step="1">
+        <div class="fader-value"><span id="pitchValue">0</span> semitonos</div>
+      </div>
+    </div>
+    <div class="console-actions">
+      <button class="btn primary" id="renderBtn">Renderizar cambios</button>
+      <button class="btn ghost" id="resetTempoBtn">Restablecer</button>
+      <button class="btn" id="exportMixBtn" disabled>Descargar WAV</button>
+    </div>
+    <p class="hint" id="renderHint">El motor usa WSOLA (time-stretch clásico): tempo y tono se procesan por separado sin depender de servicios externos.</p>
+    <div class="progress" id="renderProgress" hidden><div class="progress-bar" id="renderProgressBar"></div></div>
+  </section>
+
+  <!-- Stems -->
+  <section class="console" id="stemsSection" hidden>
+    <h2 class="section-title">02 — Separación de stems</h2>
+    <p class="hint">Separación por DSP clásico (cancelación de canal central + filtrado por banda). Es una aproximación, no un aislamiento perfecto tipo IA.</p>
+    <button class="btn primary" id="separateBtn">Separar en stems</button>
+    <div class="progress" id="stemProgress" hidden><div class="progress-bar" id="stemProgressBar"></div></div>
+    <div class="stem-grid" id="stemGrid" hidden>
+      <!-- se llena por JS -->
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span>Procesamiento 100% local en tu navegador. Nada se sube a ningún servidor.</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
